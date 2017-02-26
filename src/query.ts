@@ -63,17 +63,16 @@ class ApolloQuery<T> extends Query<T> {
 
   private subscription: Subscription
 
-  constructor (private query: ObservableQuery<T>) {
+  constructor (private query: ObservableQuery<T>, private _canStart: Boolean = false) {
     super()
   }
 
   onSubscribe () {
-    if (this.subscription) {
+    if (!this._canStart) {
       return
     }
     this.subscription = this.query.subscribe({
       next: ({ data, loading }) => {
-        console.log(`Loading: ${loading}`)
         this.setCurrent(data, loading)
       },
       error: (error) => {
@@ -86,6 +85,12 @@ class ApolloQuery<T> extends Query<T> {
     if (this.subscription) {
       this.subscription.unsubscribe()
     }
+  }
+
+  start (variables: any = {}) {
+    this._canStart = true
+    this.query.setVariables(variables)
+    this.onSubscribe()
   }
 
 }
