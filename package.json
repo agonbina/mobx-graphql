@@ -1,6 +1,6 @@
 {
   "name": "mobx-graphql",
-  "version": "0.0.3",
+  "version": "0.1.0",
   "description": "Mobx bindings to apollo-client queries and mutations",
   "main": "build/index.js",
   "scripts": {
