@@ -1,6 +1,5 @@
-declare module 'mobx-graphql/query' {
-	import { ObservableQuery } from 'apollo-client';
-	export abstract class Query<T> {
+declare module 'mobx-graphql/base' {
+	 abstract class Base<T> {
 	    abstract onSubscribe(): void;
 	    abstract onUnsubscribe(): void;
 	    private _loading;
@@ -15,12 +14,22 @@ declare module 'mobx-graphql/query' {
 	    hasError(): boolean;
 	    error(): Error | undefined;
 	    current(): T;
-	} class ApolloQuery<T> extends Query<T> {
+	}
+	export default Base;
+
+}
+declare module 'mobx-graphql/query' {
+	import { ObservableQuery } from 'apollo-client';
+	import Base from 'mobx-graphql/base'; class ApolloQuery<T> extends Base<T> {
 	    private query;
+	    private _canStart;
 	    private subscription;
-	    constructor(query: ObservableQuery<T>);
+	    constructor(query: ObservableQuery<T>, _canStart?: Boolean);
 	    onSubscribe(): void;
 	    onUnsubscribe(): void;
+	    start(variables?: {
+	        [key: string]: any;
+	    }): void;
 	}
 	export default ApolloQuery;
 
